@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="dns-prefetch" href="//mobile.yangkeduo.com">
+    <link rel="dns-prefetch" href="//cdn.yangkeduo.com">
+    <link rel="dns-prefetch" href="//apiv2.yangkeduo.com">
+    <link rel="dns-prefetch" href="//pinduoduo.img-cn-shanghai.aliyuncs.com">
+    <link rel="dns-prefetch" href="//omsproduction.img-cn-shanghai.aliyuncs.com">
+    <link rel="dns-prefetch" href="//testpdd.img-cn-shanghai.aliyuncs.com">
+    <link rel="dns-prefetch" href="//pinduoduo.b0.upaiyun.com">
+    <link rel="dns-prefetch" href="//testpdd.b0.upaiyun.com">
+    <link rel="dns-prefetch" href="//omsproduction.b0.upaiyun.com">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="shortcut icon" href="//cdn.yangkeduo.com/favicon.ico">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <meta property="og:title" content="拼多多商城"/>
+    <meta property="og:description" content="风靡全国的拼团商城，优质商品新鲜直供，快来一起拼多多吧"/>
+    <meta property="og:image" content="http://pinduoduo.img-cn-shanghai.aliyuncs.com/base/share_logo.jpg"/>
+    
+    <title>拼多多</title>
+</head>
+
+<body>
+
+    <link rel="stylesheet" href="http://cdn.yangkeduo.com/assets/css/boot_065a7aa9154261eff2bdba798438066b.css">
+    <script src="http://cdn.yangkeduo.com/assets/js/boot_5f6aa17a811624dcbca7.js" crossorigin></script>
+    <div class="goods-container" ms-controller="root" ms-css-visibility = "goodsVisible">
+        <div id="banner" class="focus goods-focus ect-padding-lr ect-margin-tb" ms-css-height="goodsBanner" ms-if="isOnSale || spikeComing" ms-click="viewGoodsImage" >
+        </div>
+        <section id="g-price" class="g-sec" ms-if="isOnSale || spikeComing">
+            <div class="item-price-bar" >
+                <span class="tuan-price">￥{{groupInfo.price}}</span>
+                <div class="market_price">
+                    <del>￥</del>
+                    <del ms-text="marketPrice"></del>
+                </div>
+                <div class="lottery-icon" ms-class="free-trial-icon: isFreeTrial" ms-if="hasLotteryRule">{{eventTypeName}}</div>
+                <div class="sold-quant" ms-if="!isLuckyDraw&&!isFreeTrial&&!isCapitalGiftLottery"><span>累计销量：<i id="sold_quantity" ms-text="soldQuantity"></i>件</span></div>
+            </div>
+        </section>
+        <section id="g-desc" class="g-sec">
+            <div class="item-g-name">{{goodsName}}</div>
+            <div class="item-g-desc">{{goodsDescription}}</div>
+            <div class="out-pic" ms-if="!isOnSale || superSpikeComing" ms-class="coming-pic: spikeComing == true"></div>
+        </section>
+        <section id="g-lottery-rule" class="g-sec" ms-if="hasLotteryRule||isOwnerCashBackGoods">
+            <span ms-text="specialRule.title"></span>
+            <span ms-text="specialRule.time"></span>
+            <span ms-repeat-label="specialRule.detail" ms-if-loop="!!label" ms-text="label"></span>
+        </section>
+        <section id="g-country-warehouse" class="g-sec" ms-if="haitaoVisible">
+            <img ms-class="item-g-country-img" ms-src="country_img_url">
+            <span class="item-g-cw">{{goodsCountry}} {{goodsWarehouse}}</span>
+        </section>
+        <section id="g-mall-service">
+            <ul>
+                <li ms-repeat-item="mallService" ms-class="{{item.m_class}}" ms-if-loop="item.isVisible">
+                    <span>{{item.type}}</span>
+                </li>
+            </ul>
+        </section>
+        <section id="g-invite-tip" class="g-sec">
+            <span ms-text="inviteHint[0]"></span>
+            <span class="item-g-number" ms-if="inviteHint[1]">{{groupInfo.size-1}}</span>
+            <span ms-text="inviteHint[1]" ms-if="inviteHint[1]"></span>
+        </section>
+        <section id="g-nearby-group" ms-if="localGroups.length>0">
+            <span class="item-nearby-gourp-tip">以下小伙伴正在发起团购，您可以直接参与</span>
+            <div class="nearby_group_detail" ms-repeat-item="localGroups" ms-click="joinNearbyGroup(item.groupOrderID)">
+                <div class="nearby_g_img">
+                    <img class="nearby_g_owner_img" ms-src="item.avatar">
+                </div>
+                <div class="nearby_g_button">
+                    <div class="nearby_g_info">
+                        <div id="nearby_g_owner" ms-text="item.nickname"></div>
+                        <div class="nearby_g_left_user_num">还差{{item.requireNum}}人成团</div>
+                        <div id="nearby_g_address" ms-text="item.cityName"></div>
+                        <div id="nearby_g_left_time">剩余
+                            <span id="left_time_day" ms-if="item.leftDays>0" ms-text="item.leftDays"></span>
+                            <span ms-if="item.leftDays>0">天:</span>
+                            {{leftTime[$index].leftHours}}:{{leftTime[$index].leftMinutes}}:{{leftTime[$index].leftSeconds}}结束
+                        </div>
+                    </div>
+                </div>
+                <div class="qucantuan">
+                    <span>去参团</span>
+                    <div class='qucan-tuan-arrow'></div>
+                    <!-- <img src="/assets/img/qucantuan_arrow.png"> -->
+                </div>
+                <div class="nearby_line"></div>
+            </div>
+        </section>
+
+        <section id="g-mall-info" ms-if="mall.name.length>0" ms-click="gotoMall()">
+            <img ms-src="{{mall.logo}}">
+            <div class="mall_sub">
+                <span ms-text="mall.name"></span>
+                <div class="sales">销量：{{mall.soldQuantity}}</div>
+            </div>
+            <div class="enter_button">
+                <span ms-text="mallButtonText"></span>
+            </div>
+        </section>
+        <div id="free-trial-rule" ms-class="free-trial-rule-goods:isFreeTrial"></div>
+        <section id="goods_details"></section>
+        <div class="kt" ms-if="!hasAssociatedGroup || !isOnSale">
+            <a id="kt_index_btn" class="kt_index" ms-click="toindex()" ms-if="(isOnSale || spikeComing) && (resultOn != 'waiting')">
+                <div class="kt_index_img">
+                    <div class="kt_index_img_home"></div>
+                    <!-- <img src="/assets/img/index.png"> -->
+                </div>
+                <div class="kt_index_text">首页</div>
+            </a>
+            <a id="kt_like_btn" class="kt_like" ms-click="goodsLike()">
+                <div class="kt_index_img">
+                    <div class="kt_index_img_bg" ms-class-liked="islike"></div>
+                    <!--img src="/assets/img/message.png" ms-if="mall.canContact">
+                    <img src="/assets/img/chat_disable.png" ms-if="!mall.canContact"-->
+                </div>
+                <div class="kt_index_text">收藏</div>
+            </a>
+            <!--img ms-src="likeImg" class="kt_index_img_gif"-->
+            <a id="kt_message_btn" class="kt_message" ms-click="tomessage()">
+                <div class="kt_message_img" ms-class-can_contact="mall.canContact">
+                </div>
+                <div class="kt_message_text">客服</div>
+            </a>
+            <div class="checkMoreGroups" ms-click="toindex" ms-if="!isOnSale && !spikeComing || (resultOn=='waiting')">
+                <div class="checkMoreGroupsInside">
+                    <div class='check-more-home-icon'></div>
+                    <!-- <img src="/assets/img/coupon_home2.png"> -->
+                    <span>更多拼团</span>
+                </div>
+            </div>
+            <div id="lottery_lucky_button" class="kt_lottery" ms-click="go_to_lucky_list" ms-if="resultOn=='on'">{{showResultLabel}}</div>
+            <a id="tuan_more_btn" class="kt_item" ms-if="groupInfo.visible && !spikeComing && !lotteryComing && !hasfreecoupons && !isFreeTrial && isOnSale && (resultOn!='on')" ms-click="groupBuy" ms-class="out:isOnSale==false">
+                <div ms-class="kt_price">
+                    <span id="tuan_more_price">
+                        <i>￥</i>
+                        <i ms-if="!isCapitalGift&&!isCapitalGiftLottery">{{groupInfo.price}}</i>
+                        <i ms-if="isCapitalGift||isCapitalGiftLottery">{{groupInfo.totalPrice}} 包团</i>
+                    </span>
+                </div>
+                <div class="kt_btn">
+                    <b id="tuan_more_number" ms-text="groupInfo.description"></b>
+                </div>
+            </a>
+            <div ms-if="groupInfo.visible && (spikeComing || lotteryComing)"  class="spike_coming_button" ms-click="defaultClick">
+                <span ms-text="if_spike_coming"></span>
+            </div>
+            <div ms-if="groupInfo.visible && isFreeTrial && !spikeComing && !lotteryComing && !hasfreecoupons && isOnSale && (resultOn!='on')"  class="free-trial-btn" ms-click="groupBuy">
+                <div ms-class="kt_price">
+                    <span id="tuan_more_price">
+                        <i>￥</i>
+                        <i>{{groupInfo.price}}</i>
+                    </span>
+                </div>
+                <div class="kt_btn">
+                    <b id="tuan_more_number" ms-text="groupInfo.description"></b>
+                </div>
+            </div>
+            <a id="tuan_one_btn" class="kt_item kt_item_buy" ms-if="directBuyInfo.visible && !hasfreecoupons && (isOnSale || spikeComing) && (resultOn != 'on')" ms-click="directBuy" ms-class="out:isOnSale==false||isLuckyDraw||isFreeTrial||isCapitalGift||isCapitalGiftLottery" >
+                <div ms-class="kt_price">
+                    <div>
+                        <b id="tuan_one_price">￥{{directBuyInfo.price}}</b>
+                    </div>
+                </div>
+                <div class="kt_btn" id="tuan_one_number" ms-text="directBuyInfo.description"></div>
+            </a>
+            <a id="tuanzhang_free_button" class="kt_free_button" ms-if="hasfreecoupons && isOnSale" ms-click="groupBuy">
+                <span ms-class="tuanzhang_free_text">0元开团</span>
+                <div ms-class="tuanzhang_free_price"><b>￥0</b></div>
+                <div class="tuanzhang_free_btn" ms-text="groupInfo.description"></div>
+            </a>
+        </div>
+        <div class="kt which_one" ms-if="hasAssociatedGroup && isOnSale" >
+            <a class="kt_item kt_item1" ms-class="out:!isOnSale" ms-click="groupBuyOrPromptShare"><span ms-text="groupRoleDescription"></span>
+                <div class="kt_height">
+                    <b id="tuan_more_price">
+                        ￥
+                        <i ms-if="!isCapitalGift&&!isCapitalGiftLottery">{{groupInfo.price}}</i>
+                        <i ms-if="isCapitalGift||isCapitalGiftLottery">0</i>
+                    </b>
+                </div>
+            </a>
+        </div>
+        <div class="kt_lottery_waiting" ms-if="resultOn=='waiting'" ms-text="lotteryWaitingLabel"></div>
+    </div>
+
+    <div id="spacer" style="height: 1px;background-color:#ffffff ;"></div>
+    <div id="go_top_goods"><span>顶部</span></div>
+    <div id="go_top_close"><span>关闭</span></div>
+
+    <script src="http://cdn.yangkeduo.com/assets/js/vender_2f68e04ea8d95a641496.js" crossorigin></script>
+    <script src="http://cdn.yangkeduo.com/assets/js/common_0493a25e3a6d6501cccc.js" crossorigin></script>
+    <script src="http://cdn.yangkeduo.com/assets/js/goods_e294297c0d63cef59574.js" crossorigin></script>
+
+</body>
+
+
+
+</html>
